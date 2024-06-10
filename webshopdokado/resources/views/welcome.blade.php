@@ -8,7 +8,8 @@
 </head>
 <body>
     <header>
-        <h1>Welkom bij onze Reviews Pagina!</h1><a href="{{ route('login') }}" class="btn">Go to Login</a>
+        <h1>Welkom bij onze Reviews Pagina!</h1>
+        <a href="{{ route('login') }}" class="btn login-btn">Inloggen</a>
     </header>
     <div class="container">
         <h2>Laat een review achter</h2>
@@ -47,8 +48,9 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 <style>
-    body {
+  body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     margin: 0;
@@ -56,10 +58,32 @@
 }
 
 header, footer {
-    background-color: #333;
+    background-color: #00274d; /* Darker blue color */
     color: white;
     text-align: center;
     padding: 20px 0;
+    position: relative;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header .login-btn {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    background-color: #001f3f; /* Matching darker blue for the button */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+header .login-btn:hover {
+    background-color: #00142e; /* Even darker blue for the hover state */
 }
 
 .container {
@@ -97,7 +121,7 @@ button {
     display: block;
     width: 100px;
     padding: 10px;
-    background-color: #28a745;
+    background-color: #00274d;
     color: white;
     border: none;
     border-radius: 4px;
@@ -107,7 +131,7 @@ button {
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #0056b3;
 }
 
 .review {
@@ -132,7 +156,7 @@ button:hover {
 .comment-submit {
     display: block;
     padding: 5px 10px;
-    background-color: #007bff;
+    background-color: #00274d;
     color: white;
     border: none;
     border-radius: 4px;
@@ -146,12 +170,14 @@ button:hover {
 .comment {
     margin-top: 10px;
     padding-left: 10px;
-    border-left: 2px solid #007bff;
+    border-left: 2px  #00274d;
 }
+
+
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+   document.addEventListener('DOMContentLoaded', () => {
     const reviewForm = document.getElementById('review-form');
     const reviewsList = document.getElementById('reviews-list');
 
@@ -174,14 +200,16 @@ button:hover {
 
         const likeButton = document.createElement('button');
         likeButton.textContent = 'Like';
-        likeButton.dataset.likes = 0; // Initialiseer het aantal likes op 0
+        likeButton.classList.add('like-button');
+        likeButton.dataset.likes = 0;
         likeButton.addEventListener('click', () => {
-            likeButton.dataset.likes++; // Verhoog het aantal likes bij elke klik
+            likeButton.dataset.likes++;
             likeButton.textContent = `Like (${likeButton.dataset.likes})`;
         });
 
         const commentButton = document.createElement('button');
         commentButton.textContent = 'Comment';
+        commentButton.classList.add('comment-button');
         commentButton.addEventListener('click', () => {
             const commentInput = document.createElement('textarea');
             commentInput.placeholder = 'Plaats een opmerking...';
@@ -211,13 +239,12 @@ button:hover {
         review.appendChild(likeButton);
         review.appendChild(commentButton);
 
-        // Voeg de review op een willekeurige positie in
         const randomIndex = Math.floor(Math.random() * (reviewsList.children.length + 1));
         reviewsList.insertBefore(review, reviewsList.children[randomIndex]);
 
-        // Clear the form
         reviewForm.reset();
     });
 });
+
 
     </script>
