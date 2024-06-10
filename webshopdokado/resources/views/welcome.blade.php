@@ -42,6 +42,7 @@
     </div>
     <footer>
         <p>&copy; 2024 Reviews Pagina</p>
+        <p>&copy; Dokado</p>
     </footer>
     <script src="script.js"></script>
 </body>
@@ -148,6 +149,7 @@ button:hover {
     border-left: 2px solid #007bff;
 }
 </style>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
     const reviewForm = document.getElementById('review-form');
@@ -217,4 +219,5 @@ button:hover {
         reviewForm.reset();
     });
 });
-</script>
+
+    </script>
