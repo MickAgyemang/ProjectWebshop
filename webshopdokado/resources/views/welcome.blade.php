@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reviews Pagina</title>
+    <title>Reviews Pagina </title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Welkom bij onze Reviews Pagina!</h1>
+        <h1>Welkom bij onze Reviews Pagina!</h1><a href="{{ route('login') }}" class="btn">Go to Login</a>
     </header>
     <div class="container">
         <h2>Laat een review achter</h2>
