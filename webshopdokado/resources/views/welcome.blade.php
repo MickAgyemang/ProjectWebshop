@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reviews Pagina </title>
+    <title>Reviews Pagina</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Welkom bij onze Reviews Pagina!</h1>
+        <div class="logo-container">
+            <img src="/img/logodokado.png" alt="Logo" class="logo">
+        </div>
+        <h1>DOKADO</h1>
         <a href="{{ route('login') }}" class="btn login-btn">Inloggen</a>
     </header>
     <div class="container">
@@ -34,7 +37,7 @@
             <button type="submit">Verzenden</button>
         </form>
         <h2>Recente Reviews</h2>
-        <div id="reviews-list">
+        <div id="reviews-list" class="reviews-list">
             <!-- Dummy Reviews komen hier -->
             <div class="review">
                 <div class="name">John Doe</div>
@@ -50,15 +53,13 @@
             </div>
         </div>
     </div>
-    <footer>
-        <p>&copy; 2024 Reviews Pagina</p>
-        <p>&copy; Dokado</p>
-    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
 
 <style>
+ body {
 body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
@@ -72,10 +73,23 @@ header, footer {
     text-align: center;
     padding: 20px 0;
     position: relative;
+
+}
+
+.logo-container {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.logo {
+    height: 40px; /* Adjust the height as needed */
 }
 
 header h1 {
     margin: 0;
+    padding: 0 60px; /* Add padding to make space for the logo */
 }
 
 header .login-btn {
@@ -130,7 +144,7 @@ button {
     display: block;
     width: 100px;
     padding: 10px;
-    background-color: #00274d;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
@@ -143,37 +157,21 @@ button:hover {
     background-color: #0056b3;
 }
 
+.reviews-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
 .review {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-}
-
-.review:last-child {
-    border-bottom: none;
-}
-
-.review .name {
-    font-weight: bold;
-}
-
-.comment-input {
-    width: calc(100% - 20px);
-    margin-bottom: 10px;
-    padding: 5px;
-}
-
-.comment-submit {
-    display: block;
-    padding: 5px 10px;
-    background-color: #00274d;
-    color: white;
-    border: none;
+    border: 1px solid #ddd;
+    padding: 10px;
+    flex: 1 1 calc(33.333% - 20px); /* Three reviews per row, with space between */
+    box-sizing: border-box;
     border-radius: 4px;
-    cursor: pointer;
-}
-
-.comment-submit:hover {
-    background-color: #0056b3;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .comment {
@@ -233,9 +231,9 @@ button:hover {
         const likeButton = document.createElement('button');
         likeButton.textContent = 'Like';
         likeButton.classList.add('like-button');
-        likeButton.dataset.likes = 0;
+        likeButton.dataset.likes = 0; // Initialiseer het aantal likes op 0
         likeButton.addEventListener('click', () => {
-            likeButton.dataset.likes++;
+            likeButton.dataset.likes++; // Verhoog het aantal likes bij elke klik
             likeButton.textContent = `Like (${likeButton.dataset.likes})`;
         });
 
@@ -271,9 +269,9 @@ button:hover {
         review.appendChild(likeButton);
         review.appendChild(commentButton);
 
-        const randomIndex = Math.floor(Math.random() * (reviewsList.children.length + 1));
-        reviewsList.insertBefore(review, reviewsList.children[randomIndex]);
+        reviewsList.appendChild(review);
 
+        // Clear the form
         reviewForm.reset();
     });
 });
