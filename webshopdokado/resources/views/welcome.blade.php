@@ -40,12 +40,14 @@
         <div id="reviews-list" class="reviews-list">
             <!-- Dummy Reviews komen hier -->
             <div class="review">
+                <div class="rating">★★★★★</div>
                 <div class="name">John Doe</div>
                 <div class="content">Dit is een geweldige website!</div>
                 <button class="like-button">Like</button>
                 <button class="comment-button">Comment</button>
             </div>
             <div class="review">
+                <div class="rating">★★★★☆</div>
                 <div class="name">Jane Doe</div>
                 <div class="content">Ik ben onder de indruk van de service!</div>
                 <button class="like-button">Like</button>
@@ -208,6 +210,10 @@ button:hover {
     color: #FFD700;
 }
 
+.rating {
+    color: #FFD700;
+}
+
 
 </style>
 
@@ -220,6 +226,18 @@ button:hover {
         e.preventDefault();
         e.stopPropagation();
 
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 0; i < 5; i++) {
+                if (i < rating) {
+                    stars += '★';
+                } else {
+                    stars += '☆';
+                }
+            }
+        return stars;
+        }
+
         const name = document.getElementById('name').value;
         const reviewText = document.getElementById('review').value;
         const rating = document.querySelector('input[name="rating"]:checked').value;
@@ -229,7 +247,7 @@ button:hover {
 
         const reviewRating = document.createElement('div');
         reviewRating.classList.add('rating');
-        reviewRating.textContent = `Rating: ${rating} stars`;
+        reviewRating.textContent = generateStars(rating);
 
         const reviewName = document.createElement('div');
         reviewName.classList.add('name');
