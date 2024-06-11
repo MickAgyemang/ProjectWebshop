@@ -22,6 +22,15 @@
                 <label for="review">Review:</label>
                 <textarea id="review" required></textarea>
             </div>
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <div class="star-rating">
+                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">★</label>
+                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">★</label>
+                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">★</label>
+                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars">★</label>
+                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars">★</label>
+                </div>
             <button type="submit">Verzenden</button>
         </form>
         <h2>Recente Reviews</h2>
@@ -50,7 +59,7 @@
 </html>
 
 <style>
-  body {
+body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     margin: 0;
@@ -171,6 +180,29 @@ button:hover {
     margin-top: 10px;
     padding-left: 10px;
     border-left: 2px  #00274d;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: space-between;
+    width: 250px;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.star-rating label {
+    cursor: pointer;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 24px;
+    color: #ccc;
+    order: 1;
+}
+
+.star-rating input[type="radio"]:checked ~ label {
+    color: #f00;
 }
 
 
