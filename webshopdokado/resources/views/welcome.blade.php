@@ -28,11 +28,11 @@
             <div class="form-group">
                 <label for="rating">Rating:</label>
                 <div class="star-rating">
-                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">★</label>
-                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">★</label>
-                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">★</label>
+                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 star">★</label>
                     <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars">★</label>
-                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars">★</label>
+                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">★</label>
+                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">★</label>
+                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 stars">★</label>
                 </div>
             <button type="submit">Verzenden</button>
         </form>
@@ -59,7 +59,6 @@
 </html>
 
 <style>
- body {
 body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
@@ -199,8 +198,14 @@ button:hover {
     order: 1;
 }
 
+.star-rating input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
 .star-rating input[type="radio"]:checked ~ label {
-    color: #f00;
+    color: #FFD700;
 }
 
 
@@ -213,12 +218,18 @@ button:hover {
 
     reviewForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        e.stopPropagation();
 
         const name = document.getElementById('name').value;
         const reviewText = document.getElementById('review').value;
+        const rating = document.querySelector('input[name="rating"]:checked').value;
 
         const review = document.createElement('div');
         review.classList.add('review');
+
+        const reviewRating = document.createElement('div');
+        reviewRating.classList.add('rating');
+        reviewRating.textContent = `Rating: ${rating} stars`;
 
         const reviewName = document.createElement('div');
         reviewName.classList.add('name');
@@ -264,6 +275,7 @@ button:hover {
             review.appendChild(commentSubmit);
         });
 
+        review.appendChild(reviewRating);
         review.appendChild(reviewName);
         review.appendChild(reviewContent);
         review.appendChild(likeButton);
