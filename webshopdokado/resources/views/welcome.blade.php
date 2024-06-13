@@ -1,53 +1,66 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <h2>Laat een review achter</h2>
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews Pagina</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="/img/logodokado.png" alt="Logo" class="logo">
         </div>
-    @endif
-    <form id="review-form" action="{{ route('reviews.store') }}" method="POST">
-        @csrf
-        <div class="form-group">
-            <label for="name">Naam:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-            <label for="review">Review:</label>
-            <textarea id="review" name="review" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="rating">Rating:</label>
-            <div class="star-rating">
-                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars">★</label>
-                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars">★</label>
-                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">★</label>
-                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">★</label>
-                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">★</label>
+        <h1>DOKADO</h1>
+        <a href="{{ route('login') }}" class="btn login-btn">Inloggen</a>
+    </header>
+    <div class="container">
+        <h2>Laat een review achter</h2>
+        <form id="review-form">
+            <div class="form-group">
+                <label for="name">Naam:</label>
+                <input type="text" id="name" required>
             </div>
-        </div>
-        <button type="submit">Verzenden</button>
-    </form>
-
-    <h2>Recente Reviews</h2>
-    <div id="reviews-list" class="reviews-list">
-        @foreach($reviews as $review)
+            <div class="form-group">
+                <label for="review">Review:</label>
+                <textarea id="review" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 star">★</label>
+                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars">★</label>
+                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">★</label>
+                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">★</label>
+                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 stars">★</label>
+                </div>
+            <button type="submit">Verzenden</button>
+        </form>
+        <h2>Recente Reviews</h2>
+        <div id="reviews-list" class="reviews-list">
+            <!-- Dummy Reviews komen hier -->
             <div class="review">
-                <div class="rating">{{ str_repeat('★', $review->rating) }}{{ str_repeat('☆', 5 - $review->rating) }}</div>
-                <div class="name">{{ $review->name }}</div>
-                <div class="content">{{ $review->review }}</div>
+                <div class="rating">★★★★★</div>
+                <div class="name">John Doe</div>
+                <div class="content">Dit is een geweldige website!</div>
                 <button class="like-button">Like</button>
                 <button class="comment-button">Comment</button>
             </div>
-        @endforeach
+            <div class="review">
+                <div class="rating">★★★★☆</div>
+                <div class="name">Jane Doe</div>
+                <div class="content">Ik ben onder de indruk van de service!</div>
+                <button class="like-button">Like</button>
+                <button class="comment-button">Comment</button>
+            </div>
+        </div>
     </div>
-</div>
-@endsection
+
+    <script src="script.js"></script>
+</body>
+</html>
 
 <style>
-/* Voeg hier je CSS-styling toe zoals in je oorspronkelijke HTML */
 body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
@@ -61,6 +74,7 @@ header, footer {
     text-align: center;
     padding: 20px 0;
     position: relative;
+
 }
 
 .logo-container {
@@ -199,24 +213,63 @@ button:hover {
 .rating {
     color: #FFD700;
 }
+
+
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const likeButtons = document.querySelectorAll('.like-button');
-    likeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            let likes = parseInt(button.getAttribute('data-likes')) || 0;
-            likes++;
-            button.setAttribute('data-likes', likes);
-            button.textContent = `Like (${likes})`;
-        });
-    });
+   document.addEventListener('DOMContentLoaded', () => {
+    const reviewForm = document.getElementById('review-form');
+    const reviewsList = document.getElementById('reviews-list');
 
-    const commentButtons = document.querySelectorAll('.comment-button');
-    commentButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const review = e.target.closest('.review');
+    reviewForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 0; i < 5; i++) {
+                if (i < rating) {
+                    stars += '★';
+                } else {
+                    stars += '☆';
+                }
+            }
+        return stars;
+        }
+
+        const name = document.getElementById('name').value;
+        const reviewText = document.getElementById('review').value;
+        const rating = document.querySelector('input[name="rating"]:checked').value;
+
+        const review = document.createElement('div');
+        review.classList.add('review');
+
+        const reviewRating = document.createElement('div');
+        reviewRating.classList.add('rating');
+        reviewRating.textContent = generateStars(rating);
+
+        const reviewName = document.createElement('div');
+        reviewName.classList.add('name');
+        reviewName.textContent = name;
+
+        const reviewContent = document.createElement('div');
+        reviewContent.classList.add('content');
+        reviewContent.textContent = reviewText;
+
+        const likeButton = document.createElement('button');
+        likeButton.textContent = 'Like';
+        likeButton.classList.add('like-button');
+        likeButton.dataset.likes = 0; // Initialiseer het aantal likes op 0
+        likeButton.addEventListener('click', () => {
+            likeButton.dataset.likes++; // Verhoog het aantal likes bij elke klik
+            likeButton.textContent = `Like (${likeButton.dataset.likes})`;
+        });
+
+        const commentButton = document.createElement('button');
+        commentButton.textContent = 'Comment';
+        commentButton.classList.add('comment-button');
+        commentButton.addEventListener('click', () => {
             const commentInput = document.createElement('textarea');
             commentInput.placeholder = 'Plaats een opmerking...';
             commentInput.classList.add('comment-input');
@@ -229,17 +282,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (commentContent.trim() !== '') {
                     const comment = document.createElement('div');
                     comment.classList.add('comment');
-                    comment.textContent = `${document.getElementById('name').value}: ${commentContent}`;
+                    comment.textContent = `${name}: ${commentContent}`;
 
                     review.appendChild(comment);
-                    commentInput.remove();
-                    commentSubmit.remove();
+                    commentInput.value = '';
                 }
             });
 
             review.appendChild(commentInput);
             review.appendChild(commentSubmit);
         });
+
+        review.appendChild(reviewRating);
+        review.appendChild(reviewName);
+        review.appendChild(reviewContent);
+        review.appendChild(likeButton);
+        review.appendChild(commentButton);
+
+        reviewsList.appendChild(review);
+
+        // Clear the form
+        reviewForm.reset();
     });
 });
-</script>
+
+
+    </script>
