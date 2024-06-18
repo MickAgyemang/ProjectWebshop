@@ -1,38 +1,51 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Http\Controllers;
 
-class CreateReviewsTable extends Migration
+use Illuminate\Http\Request;
+use App\Models\Review; // Importeer het Review model
+
+class ReviewController extends Controller
 {
     /**
-     * Run the migrations.
+     * Laat de welkomstpagina zien met alle reviews.
      *
-     * @return void
+     * @return \Illuminate\Http\Response
      */
-    public function up()
+    public function index()
     {
-        Schema::create('reviews', function (Blueprint $table) {
-            $table->id(); // Unieke ID voor elke review
-            $table->unsignedBigInteger('user_id'); // Verwijzing naar de gebruikers-ID
-            $table->string('name'); // Naam van de gebruiker die de review plaatst
-            $table->text('review'); // Tekst van de review
-            $table->integer('rating'); // Rating van de review
-            $table->timestamps(); // Timestamp kolommen (created_at en updated_at)
+        $reviews = Review::latest()->get(); // Haal alle reviews op, gesorteerd op nieuwste eerst
 
-            // Buitenlandse sleutelrelatie met de users-tabel
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
+        return view('welcome', compact('reviews'));
     }
 
     /**
-     * Reverse the migrations.
+     * Sla een nieuwe review op in de database.
      *
-     * @return void
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function down()
+    public function store(Request $request)
     {
-        Schema::dropIfExists('reviews'); // Dropt de reviews-tabel indien deze bestaat
+        // Valideer de invoer van het formulier
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'review' => 'required|string',
+            'rating' => 'required|integer|between:1,5',
+        ]);
+
+        // Maak een nieuwe review aan in de database
+        $review = new Review();
+        $review->user_id = auth()->id(); // Gebruik de ingelogde gebruiker (indien nodig)
+        $review->name = $request->name;
+        $review->review = $request->review;
+        $review->rating = $request->rating;
+        $review->save();
+
+        return redirect()->back()->with('success', 'Review is succesvol toegevoegd!');
     }
+
+    // Andere methoden in de controller...
 }
+
+

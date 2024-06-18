@@ -3,37 +3,49 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Review; // Zorg ervoor dat je het juiste model importeert
+use App\Models\Review; // Importeer het Review model
 
 class ReviewController extends Controller
 {
     /**
-     * Opslaan van een nieuwe review.
+     * Laat de welkomstpagina zien met alle reviews.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $reviews = Review::latest()->get(); // Haal alle reviews op, gesorteerd op nieuwste eerst
+
+        return view('welcome', compact('reviews'));
+    }
+
+    /**
+     * Sla een nieuwe review op in de database.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        // Valideer de input van het formulier
-        $validatedData = $request->validate([
+        // Valideer de invoer van het formulier
+        $request->validate([
             'name' => 'required|string|max:255',
             'review' => 'required|string',
-            'rating' => 'required|integer|min:1|max:5',
+            'rating' => 'required|integer|between:1,5',
         ]);
 
-        // Maak een nieuwe review aan en sla deze op in de database
+        // Maak een nieuwe review aan in de database
         $review = new Review();
-        $review->user_id = auth()->id(); // Gebruiker die de review indient (indien ingelogd)
-        $review->name = $validatedData['name'];
-        $review->review = $validatedData['review'];
-        $review->rating = $validatedData['rating'];
+        $review->user_id = auth()->id(); // Gebruik de ingelogde gebruiker (indien nodig)
+        $review->name = $request->name;
+        $review->review = $request->review;
+        $review->rating = $request->rating;
         $review->save();
 
-        // Redirect terug naar de pagina met een succesbericht
-        return redirect()->back()->with('success', 'Bedankt voor je review!');
+        return redirect()->back()->with('success', 'Review is succesvol toegevoegd!');
     }
 
-    // Je kunt hier andere methodes toevoegen voor bijvoorbeeld het tonen van alle reviews, bewerken, verwijderen, etc.
+    // Andere methoden in de controller...
 }
+
 
